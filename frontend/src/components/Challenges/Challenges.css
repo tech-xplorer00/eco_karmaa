@@ -21,372 +21,265 @@
   }
   
   .challenges-container {
-    margin: 30px 0;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
   }
   
   .challenges-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
   }
   
   .challenges-header h2 {
+    font-size: 2rem;
+    color: #2e7d32;
     margin: 0;
-    color: var(--text-dark);
   }
   
   .challenge-filters {
     display: flex;
-    gap: 10px;
+    gap: 0.5rem;
   }
   
   .filter-btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 20px;
-    background-color: var(--bg-light);
-    color: var(--text-dark);
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-weight: 500;
   }
   
   .filter-btn.active {
-    background-color: var(--primary);
+    background: #4CAF50;
     color: white;
-  }
-  
-  .filter-btn:hover:not(.active) {
-    background-color: var(--primary-light);
+    border-color: #4CAF50;
   }
   
   .challenge-cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    gap: 2rem;
   }
   
   .challenge-card {
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-    padding: 20px;
-    box-shadow: var(--shadow);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    overflow: hidden;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: white;
+    transition: transform 0.3s ease;
   }
   
   .challenge-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   }
   
-  .challenge-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background-color: var(--status-pending);
-  }
-  
-  .challenge-card.status-progress::before {
-    background-color: var(--status-progress);
-  }
-  
-  .challenge-card.status-completed::before {
-    background-color: var(--status-completed);
-  }
-  
-  .challenge-card.status-accomplished::before {
-    background-color: var(--status-accomplished);
-  }
-  
-  .challenge-status {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .status-indicator {
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 500;
-    color: white;
-    background-color: var(--status-pending);
-  }
-  
-  .status-indicator.status-progress {
-    background-color: var(--status-progress);
-  }
-  
-  .status-indicator.status-completed {
-    background-color: var(--status-completed);
-  }
-  
-  .status-indicator.status-accomplished {
-    background-color: var(--status-accomplished);
-  }
-  
-  .challenge-deadline {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 12px;
-    color: var(--text-light);
-  }
-  
-  .challenge-title {
-    margin: 0 0 10px 0;
-    color: var(--text-dark);
-    font-size: 18px;
+  .challenge-card h3 {
+    margin-top: 0;
+    color: #333;
   }
   
   .challenge-description {
-    margin: 0 0 15px 0;
-    color: var(--text-light);
-    font-size: 14px;
+    color: #666;
+    margin-bottom: 1.5rem;
   }
   
-  .challenge-target {
-    margin-bottom: 15px;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-dark);
+  .challenge-details {
+    margin-bottom: 1.5rem;
+  }
+  
+  .challenge-target,
+  .challenge-deadline {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
   }
   
   .challenge-progress {
-    margin-bottom: 20px;
-  }
-  
-  .progress-bar-container {
-    width: 100%;
-    height: 8px;
-    background-color: var(--bg-light);
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 5px;
+    margin: 1rem 0;
   }
   
   .progress-bar {
+    height: 10px;
+    background: #eee;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 0.25rem;
+  }
+  
+  .progress-fill {
     height: 100%;
-    background-color: var(--primary);
-    border-radius: 4px;
-    transition: width 0.5s ease;
+    background: #4CAF50;
+    transition: width 0.3s ease;
   }
   
   .progress-text {
-    font-size: 12px;
-    color: var(--text-light);
-    display: block;
-    text-align: right;
+    font-size: 0.8rem;
+    color: #666;
+  }
+  
+  .challenge-rewards {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .reward-badge,
+  .reward-points {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .badge-icon,
+  .point-icon {
+    font-size: 1.2rem;
   }
   
   .challenge-actions {
-    margin-bottom: 15px;
+    margin-top: 1.5rem;
   }
   
-  .update-progress {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .update-progress input {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .update-btn, .accomplish-btn {
-    padding: 8px 16px;
+  .btn {
+    padding: 0.5rem 1rem;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-weight: 500;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 5px;
+    transition: background 0.3s ease;
   }
   
-  .update-btn {
-    background-color: var(--primary-light);
-    color: var(--primary);
-  }
-  
-  .update-btn:hover {
-    background-color: var(--primary);
+  .btn-join {
+    background: #2196F3;
     color: white;
   }
   
-  .accomplish-btn {
-    width: 100%;
-    justify-content: center;
-    background-color: var(--accent);
+  .btn-update {
+    background: #FF9800;
     color: white;
   }
   
-  .accomplish-btn:hover {
-    background-color: #e64a19;
+  .btn-complete {
+    background: #4CAF50;
+    color: white;
+    margin-top: 1rem;
   }
   
-  .challenge-reward {
+  .btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .progress-form {
+    margin-top: 1rem;
+  }
+  
+  .progress-input-group {
     display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    color: var(--text-light);
+    gap: 0.5rem;
   }
   
-  .challenge-reward svg {
-    color: #FFC107;
+  .progress-input-group input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 80px;
   }
   
-  .badge-earned-animation {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(255, 255, 255, 0.95);
-    border-radius: var(--border-radius);
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    animation: badgeAppear 0.5s ease;
+  .challenge-error {
+    background: #ffebee;
+    color: #c62828;
+    padding: 0.5rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+  
+  .challenge-completed-message {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 0.5rem;
+    border-radius: 4px;
     text-align: center;
-    min-width: 300px;
-  }
-  
-  @keyframes badgeAppear {
-    0% {
-      opacity: 0;
-      transform: translate(-50%, -50%) scale(0.8);
-    }
-    100% {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-    }
-  }
-  
-  .badge-icon-large {
-    font-size: 48px;
-    margin-bottom: 15px;
-    color: var(--badge-legendary);
-    animation: badgeGlow 1.5s infinite alternate;
-  }
-  
-  @keyframes badgeGlow {
-    0% {
-      text-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
-      transform: scale(1);
-    }
-    100% {
-      text-shadow: 0 0 20px rgba(255, 152, 0, 0.8);
-      transform: scale(1.1);
-    }
-  }
-  
-  .badge-earned-animation h3 {
-    margin: 0 0 10px 0;
-    color: var(--text-dark);
-    font-size: 24px;
-  }
-  
-  .badge-earned-animation p {
-    margin: 0 0 5px 0;
-    color: var(--text-light);
-  }
-  
-  .badge-description {
-    font-style: italic;
-    font-size: 14px;
+    font-weight: 500;
   }
   
   .no-challenges {
     grid-column: 1 / -1;
     text-align: center;
-    padding: 30px;
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    color: var(--text-light);
+    padding: 2rem;
+    background: #f5f5f5;
+    border-radius: 8px;
+    color: #666;
   }
   
-  .challenge-card.expired::after {
-    content: 'Expired';
-    position: absolute;
-    top: 10px;
-    right: -35px;
-    background-color: rgba(244, 67, 54, 0.9);
-    color: white;
-    padding: 5px 40px;
-    transform: rotate(45deg);
-    font-size: 12px;
-    font-weight: bold;
-    z-index: 1;
+  /* Status-based styles */
+  .challenge-card.pending {
+    border-left: 4px solid #9E9E9E;
   }
   
-  /* Badge styles for different rarities */
-  .badge-common {
-    color: var(--badge-common);
+  .challenge-card.in-progress {
+    border-left: 4px solid #2196F3;
   }
   
-  .badge-uncommon {
-    color: var(--badge-uncommon);
+  .challenge-card.completed {
+    border-left: 4px solid #FF9800;
   }
   
-  .badge-rare {
-    color: var(--badge-rare);
+  .challenge-card.accomplished {
+    border-left: 4px solid #4CAF50;
   }
   
-  .badge-epic {
-    color: var(--badge-epic);
+  /* Loading spinner */
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
   }
   
-  .badge-legendary {
-    color: var(--badge-legendary);
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #4CAF50;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
   }
   
-  /* Spinner animation for React Icons */
-  .fa-spin {
-    animation: fa-spin 2s linear infinite;
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
   
-  @keyframes fa-spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
+  .alert {
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
   }
   
-  /* Responsive styles */
-  @media screen and (max-width: 768px) {
+  .alert-error {
+    background: #ffebee;
+    color: #c62828;
+    border-left: 4px solid #c62828;
+  }
+  
+  @media (max-width: 768px) {
     .challenges-header {
       flex-direction: column;
       align-items: flex-start;
-      gap: 15px;
+      gap: 1rem;
     }
     
     .challenge-filters {
       width: 100%;
       overflow-x: auto;
-      padding-bottom: 5px;
-    }
-    
-    .filter-btn {
-      white-space: nowrap;
+      padding-bottom: 0.5rem;
     }
     
     .challenge-cards {

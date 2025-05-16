@@ -1,0 +1,72 @@
+[
+  {
+    "_id": "5d725a4a7b292f5f8ceff789",
+    "title": "Reduce Water Usage",
+    "description": "Reduce your daily water consumption by tracking and minimizing usage.",
+    "targetCondition": "Save Water",
+    "targetValue": 100,
+    "currentValue": 45,
+    "status": "in-progress",
+    "badgeReward": "Water Saver",
+    "pointsReward": 500,
+    "category": "Conservation",
+    "deadline": "2023-12-31",
+    "user": "5d7a514b5d2c12c7449be042"
+  },
+  {
+    "_id": "5d725a4a7b292f5f8ceff78a",
+    "title": "Zero Waste Week",
+    "description": "Go an entire week without producing any non-recyclable waste.",
+    "targetCondition": "Days Completed",
+    "targetValue": 7,
+    "currentValue": 7,
+    "status": "completed",
+    "badgeReward": "Zero Waste Hero",
+    "pointsReward": 1000,
+    "category": "Waste",
+    "deadline": "2023-11-15",
+    "user": "5d7a514b5d2c12c7449be042"
+  },
+  {
+    "_id": "5d725a4a7b292f5f8ceff78b",
+    "title": "Plant a Garden",
+    "description": "Plant and maintain a garden with native plants to support local ecosystems.",
+    "targetCondition": "Plants",
+    "targetValue": 10,
+    "currentValue": 10,
+    "status": "accomplished",
+    "badgeReward": "Green Thumb",
+    "pointsReward": 750,
+    "category": "Gardening",
+    "completedAt": "2023-09-15",
+    "user": "5d7a514b5d2c12c7449be042"
+  },
+  {
+    "_id": "5d725a4a7b292f5f8ceff78c",
+    "title": "Renewable Energy Switch",
+    "description": "Switch to renewable energy sources for your home.",
+    "targetCondition": "Completion",
+    "targetValue": 100,
+    "currentValue": 25,
+    "status": "in-progress",
+    "badgeReward": "Power Shifter",
+    "pointsReward": 1500,
+    "category": "Energy",
+    "deadline": "2024-01-30",
+    "user": "5d7a514b5d2c12c7449be043"
+  },
+  {
+    "_id": "5d725a4a7b292f5f8ceff78d",
+    "title": "Plastic-Free Month",
+    "description": "Go an entire month without purchasing single-use plastics.",
+    "targetCondition": "Days Completed",
+    "targetValue": 30,
+    "currentValue": 0,
+    "status": "pending",
+    "badgeReward": "Plastic Fighter",
+    "pointsReward": 1200,
+    "category": "Waste",
+    "deadline": "2023-12-31",
+    "user": "5d7a514b5d2c12c7449be044"
+  }
+] 

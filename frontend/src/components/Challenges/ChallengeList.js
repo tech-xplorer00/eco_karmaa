@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useChallenges } from '../../contexts/ChallengeContext';
 import ChallengeCard from './ChallengeCard';
 import './Challenges.css';
 
 const ChallengeList = () => {
-  const { challenges, filter, setFilter } = useChallenges();
+  const { challenges, filter, setFilter, loading, error } = useChallenges();
 
   return (
     <div className="challenges-container">
@@ -38,17 +38,26 @@ const ChallengeList = () => {
         </div>
       </div>
 
-      <div className="challenge-cards">
-        {challenges.length > 0 ? (
-          challenges.map(challenge => (
-            <ChallengeCard key={challenge.id} challenge={challenge} />
-          ))
-        ) : (
-          <div className="no-challenges">
-            <p>No challenges found for this filter.</p>
-          </div>
-        )}
-      </div>
+      {error && <div className="alert alert-error">{error}</div>}
+
+      {loading ? (
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading challenges...</p>
+        </div>
+      ) : (
+        <div className="challenge-cards">
+          {challenges.length > 0 ? (
+            challenges.map(challenge => (
+              <ChallengeCard key={challenge._id} challenge={challenge} />
+            ))
+          ) : (
+            <div className="no-challenges">
+              <p>No challenges found for this filter.</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

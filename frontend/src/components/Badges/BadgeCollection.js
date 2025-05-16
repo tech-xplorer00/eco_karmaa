@@ -1,44 +1,12 @@
 import React from 'react';
-import { useChallenges } from '../../contexts/ChallengeContext';
+import { useBadges } from '../../contexts/BadgeContext';
+import { useUser } from '../../contexts/UserContext';
 import { FaTrophy } from 'react-icons/fa';
 import './Badges.css';
 
 const BadgeCollection = () => {
-  const { userBadges, userPoints } = useChallenges();
-
-  // Badge metadata
-  const badgeDetails = {
-    'Eco Beginner': {
-      description: 'Started your eco-friendly journey',
-      icon: '🌱',
-      rarity: 'common'
-    },
-    'Water Saver': {
-      description: 'Successfully reduced water consumption',
-      icon: '🌊',
-      rarity: 'uncommon'
-    },
-    'Zero Waste Hero': {
-      description: 'Went a full week without producing waste',
-      icon: '♻️',
-      rarity: 'rare'
-    },
-    'Green Thumb': {
-      description: 'Successfully planted and maintained a garden',
-      icon: '🌱',
-      rarity: 'uncommon'
-    },
-    'Power Shifter': {
-      description: 'Switched to renewable energy sources',
-      icon: '⚡',
-      rarity: 'epic'
-    },
-    'Plastic Fighter': {
-      description: 'Completed a month without purchasing single-use plastics',
-      icon: '🚫',
-      rarity: 'legendary'
-    }
-  };
+  const { badges, userBadges, loading, error } = useBadges();
+  const { userStats } = useUser();
 
   const getRarityClass = (rarity) => {
     return `badge-${rarity || 'common'}`;
@@ -50,29 +18,67 @@ const BadgeCollection = () => {
         <h2>Your Badges</h2>
         <div className="user-points">
           <FaTrophy />
-          <span>{userPoints} Points</span>
+          <span>{userStats?.points || 0} Points</span>
         </div>
       </div>
 
-      <div className="badges-grid">
-        {userBadges.map((badgeName) => {
-          const badge = badgeDetails[badgeName] || { 
-            description: 'A mystery badge', 
-            icon: '❓', 
-            rarity: 'common' 
-          };
-          
-          return (
-            <div key={badgeName} className={`badge-card ${getRarityClass(badge.rarity)}`}>
-              <div className="badge-icon">
-                {badge.icon}
+      {error && <div className="alert alert-error">{error}</div>}
+
+      {loading ? (
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading badges...</p>
+        </div>
+      ) : (
+        <div className="badges-grid">
+          {userBadges.length > 0 ? (
+            userBadges.map((badge) => (
+              <div 
+                key={badge._id} 
+                className={`badge-card ${getRarityClass(badge.rarity)}`}
+              >
+                <div className="badge-icon">
+                  {badge.icon || '🏆'}
+                </div>
+                <h3 className="badge-name">{badge.name}</h3>
+                <p className="badge-description">{badge.description}</p>
+                <span className="badge-rarity">{badge.rarity}</span>
               </div>
-              <h3 className="badge-name">{badgeName}</h3>
-              <p className="badge-description">{badge.description}</p>
-              <span className="badge-rarity">{badge.rarity}</span>
+            ))
+          ) : (
+            <div className="no-badges">
+              <p>You haven't earned any badges yet. Complete challenges to earn badges!</p>
             </div>
-          );
-        })}
+          )}
+        </div>
+      )}
+
+      <div className="available-badges">
+        <h3>Available Badges</h3>
+        {loading ? (
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+          </div>
+        ) : (
+          <div className="badges-grid">
+            {badges.filter(badge => !userBadges.some(ub => ub._id === badge._id)).map((badge) => (
+              <div 
+                key={badge._id} 
+                className={`badge-card locked ${getRarityClass(badge.rarity)}`}
+              >
+                <div className="badge-icon locked">
+                  {badge.icon || '🏆'}
+                </div>
+                <h3 className="badge-name">{badge.name}</h3>
+                <p className="badge-description">{badge.description}</p>
+                <span className="badge-rarity">{badge.rarity}</span>
+                <div className="badge-locked-overlay">
+                  <span>Locked</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

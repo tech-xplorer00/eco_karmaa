@@ -1,0 +1,50 @@
+[
+  {
+    "_id": "5d713995b721c3bb38c1f5d0",
+    "name": "Water Saver",
+    "description": "Successfully reduced water consumption",
+    "icon": "🌊",
+    "category": "Conservation",
+    "rarity": "uncommon"
+  },
+  {
+    "_id": "5d713995b721c3bb38c1f5d1",
+    "name": "Zero Waste Hero",
+    "description": "Went a full week without producing waste",
+    "icon": "♻️",
+    "category": "Waste",
+    "rarity": "rare"
+  },
+  {
+    "_id": "5d713995b721c3bb38c1f5d2",
+    "name": "Green Thumb",
+    "description": "Successfully planted and maintained a garden",
+    "icon": "🌱",
+    "category": "Gardening",
+    "rarity": "uncommon"
+  },
+  {
+    "_id": "5d713995b721c3bb38c1f5d3",
+    "name": "Power Shifter",
+    "description": "Switched to renewable energy sources",
+    "icon": "⚡",
+    "category": "Energy",
+    "rarity": "epic"
+  },
+  {
+    "_id": "5d713995b721c3bb38c1f5d4",
+    "name": "Plastic Fighter",
+    "description": "Completed a month without purchasing single-use plastics",
+    "icon": "🚫",
+    "category": "Waste",
+    "rarity": "legendary"
+  },
+  {
+    "_id": "5d713995b721c3bb38c1f5d5",
+    "name": "Eco Beginner",
+    "description": "Started your eco-friendly journey",
+    "icon": "🌍",
+    "category": "General",
+    "rarity": "common"
+  }
+] 

@@ -1,160 +1,174 @@
 import React, { useState } from 'react';
-import { 
-  FaTrophy, FaClock, FaCheck, FaSpinner 
-} from 'react-icons/fa';
 import { useChallenges } from '../../contexts/ChallengeContext';
 import './Challenges.css';
 
 const ChallengeCard = ({ challenge }) => {
-  const { updateChallengeProgress, accomplishChallenge } = useChallenges();
+  const { 
+    joinChallenge, 
+    updateChallengeProgress, 
+    completeChallenge,
+    getProgressPercentage 
+  } = useChallenges();
+  
+  const [progressValue, setProgressValue] = useState(challenge.currentValue);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [showBadgeAnimation, setShowBadgeAnimation] = useState(false);
-  const [earnedBadge, setEarnedBadge] = useState(null);
+  const [error, setError] = useState('');
 
-  const handleProgressUpdate = (e) => {
-    const newValue = parseInt(e.target.value);
-    if (!isNaN(newValue) && newValue >= 0) {
-      updateChallengeProgress(challenge.id, newValue);
-    }
-  };
-
-  const handleAccomplish = () => {
-    setIsUpdating(true);
-    const badge = accomplishChallenge(challenge.id);
-    
-    if (badge) {
-      setEarnedBadge(badge);
-      setShowBadgeAnimation(true);
-      
-      // Hide animation after 3 seconds
-      setTimeout(() => {
-        setShowBadgeAnimation(false);
-        setEarnedBadge(null);
-        setIsUpdating(false);
-      }, 3000);
-    } else {
+  const progressPercentage = getProgressPercentage(challenge);
+  const isCompleted = challenge.status === 'completed' || challenge.status === 'accomplished';
+  const isPending = challenge.status === 'pending';
+  const isInProgress = challenge.status === 'in-progress';
+  
+  const handleJoinChallenge = async () => {
+    try {
+      setIsUpdating(true);
+      setError('');
+      await joinChallenge(challenge._id);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to join challenge');
+      console.error(err);
+    } finally {
       setIsUpdating(false);
     }
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return 'No deadline';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const handleProgressChange = (e) => {
+    setProgressValue(Number(e.target.value));
   };
 
-  const getStatusClass = () => {
-    switch (challenge.status) {
-      case 'in-progress': return 'status-progress';
-      case 'completed': return 'status-completed';
-      case 'accomplished': return 'status-accomplished';
-      default: return 'status-pending';
+  const handleProgressSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (progressValue < challenge.currentValue) {
+      setError("New value can't be less than current progress");
+      return;
+    }
+    
+    if (progressValue > challenge.targetValue) {
+      setProgressValue(challenge.targetValue);
+    }
+    
+    try {
+      setIsUpdating(true);
+      setError('');
+      await updateChallengeProgress(challenge._id, { currentValue: progressValue });
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to update progress');
+      console.error(err);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
-  const getStatusText = () => {
-    switch (challenge.status) {
-      case 'in-progress': return 'In Progress';
-      case 'completed': return 'Completed';
-      case 'accomplished': return 'Accomplished';
-      default: return 'Pending';
+  const handleCompleteChallenge = async () => {
+    try {
+      setIsUpdating(true);
+      setError('');
+      await completeChallenge(challenge._id);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to complete challenge');
+      console.error(err);
+    } finally {
+      setIsUpdating(false);
     }
   };
-
-  const isExpired = challenge.isExpired && challenge.isExpired();
 
   return (
-    <div className={`challenge-card ${getStatusClass()} ${isExpired ? 'expired' : ''}`}>
-      {showBadgeAnimation && earnedBadge && (
-        <div className="badge-earned-animation">
-          <div className="badge-icon-large">
-            {earnedBadge.icon || <FaTrophy />}
-          </div>
-          <h3>Badge Earned!</h3>
-          <p>{earnedBadge.name}</p>
-          <p className="badge-description">{earnedBadge.description}</p>
-        </div>
-      )}
+    <div className={`challenge-card ${challenge.status}`}>
+      {error && <div className="challenge-error">{error}</div>}
       
-      <div className="challenge-status">
-        <span className={`status-indicator ${getStatusClass()}`}>{getStatusText()}</span>
+      <h3>{challenge.title}</h3>
+      <p className="challenge-description">{challenge.description}</p>
+      
+      <div className="challenge-details">
+        <div className="challenge-target">
+          <span>Target: </span>
+          <strong>{challenge.targetValue} {challenge.targetCondition}</strong>
+        </div>
+        
+        {(isInProgress || isCompleted) && (
+          <div className="challenge-progress">
+            <div className="progress-bar">
+              <div 
+                className="progress-fill" 
+                style={{ width: `${progressPercentage}%` }}
+              ></div>
+            </div>
+            <span className="progress-text">
+              {challenge.currentValue} / {challenge.targetValue} 
+              ({progressPercentage}%)
+            </span>
+          </div>
+        )}
+        
         {challenge.deadline && (
           <div className="challenge-deadline">
-            <FaClock />
-            <span>{isExpired ? 'Expired' : formatDate(challenge.deadline)}</span>
+            <span>Deadline: </span>
+            <strong>{new Date(challenge.deadline).toLocaleDateString()}</strong>
+          </div>
+        )}
+        
+        <div className="challenge-rewards">
+          <div className="reward-badge">
+            <span className="badge-icon">🏆</span>
+            <span>{challenge.badgeReward}</span>
+          </div>
+          <div className="reward-points">
+            <span className="point-icon">🌱</span>
+            <span>{challenge.pointsReward} points</span>
+          </div>
+        </div>
+      </div>
+      
+      <div className="challenge-actions">
+        {isPending && (
+          <button 
+            className="btn btn-join" 
+            onClick={handleJoinChallenge}
+            disabled={isUpdating}
+          >
+            {isUpdating ? 'Joining...' : 'Join Challenge'}
+          </button>
+        )}
+        
+        {isInProgress && (
+          <form className="progress-form" onSubmit={handleProgressSubmit}>
+            <div className="progress-input-group">
+              <input 
+                type="number" 
+                value={progressValue}
+                onChange={handleProgressChange}
+                min={challenge.currentValue}
+                max={challenge.targetValue}
+                disabled={isUpdating}
+              />
+              <button 
+                type="submit" 
+                className="btn btn-update"
+                disabled={isUpdating || progressValue === challenge.currentValue}
+              >
+                {isUpdating ? 'Updating...' : 'Update Progress'}
+              </button>
+            </div>
+          </form>
+        )}
+        
+        {isInProgress && progressPercentage === 100 && (
+          <button 
+            className="btn btn-complete" 
+            onClick={handleCompleteChallenge}
+            disabled={isUpdating}
+          >
+            {isUpdating ? 'Completing...' : 'Mark as Complete'}
+          </button>
+        )}
+        
+        {isCompleted && (
+          <div className="challenge-completed-message">
+            Challenge completed! 🎉
           </div>
         )}
       </div>
-      
-      <h3 className="challenge-title">{challenge.title}</h3>
-      <p className="challenge-description">{challenge.description}</p>
-      
-      <div className="challenge-target">
-        <span>Target: {challenge.targetCondition} - {challenge.targetValue}</span>
-      </div>
-      
-      <div className="challenge-progress">
-        <div className="progress-bar-container">
-          <div 
-            className="progress-bar" 
-            style={{ width: `${challenge.getProgressPercentage()}%` }}
-          ></div>
-        </div>
-        <span className="progress-text">
-          {challenge.currentValue} / {challenge.targetValue} ({challenge.getProgressPercentage()}%)
-        </span>
-      </div>
-      
-      {challenge.status !== 'accomplished' && (
-        <div className="challenge-actions">
-          {challenge.status !== 'completed' && (
-            <div className="update-progress">
-              <input 
-                type="number" 
-                min="0" 
-                max={challenge.targetValue} 
-                value={challenge.currentValue} 
-                onChange={handleProgressUpdate} 
-                disabled={isUpdating || challenge.status === 'accomplished'}
-              />
-              <button 
-                className="update-btn"
-                onClick={() => updateChallengeProgress(challenge.id, challenge.currentValue)}
-                disabled={isUpdating}
-              >
-                Update
-              </button>
-            </div>
-          )}
-          
-          {challenge.status === 'completed' && (
-            <button 
-              className="accomplish-btn"
-              onClick={handleAccomplish}
-              disabled={isUpdating}
-            >
-              {isUpdating ? (
-                <>
-                  <FaSpinner className="fa-spin" />
-                  Processing...
-                </>
-              ) : (
-                <>
-                  <FaCheck />
-                  Claim Reward
-                </>
-              )}
-            </button>
-          )}
-        </div>
-      )}
-      
-      {challenge.badgeReward && (
-        <div className="challenge-reward">
-          <FaTrophy />
-          <span>Reward: {challenge.badgeReward} Badge + {challenge.pointsReward} points</span>
-        </div>
-      )}
     </div>
   );
 };

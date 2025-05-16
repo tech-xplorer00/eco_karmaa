@@ -1,0 +1,28 @@
+const express = require('express');
+const {
+  getRewards,
+  getReward,
+  createReward,
+  updateReward,
+  deleteReward,
+  getUserRewards,
+  redeemReward
+} = require('../controllers/rewards');
+
+const router = express.Router();
+
+const { protect } = require('../middleware/auth');
+
+router.route('/')
+  .get(getRewards)
+  .post(protect, createReward);
+
+router.route('/:id')
+  .get(getReward)
+  .put(protect, updateReward)
+  .delete(protect, deleteReward);
+
+router.get('/user', protect, getUserRewards);
+router.put('/:id/redeem', protect, redeemReward);
+
+module.exports = router; 

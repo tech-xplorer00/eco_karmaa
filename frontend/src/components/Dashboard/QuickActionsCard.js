@@ -20,17 +20,18 @@ const QuickActionsCard = () => {
           <span>Bike Ride</span>
         </div>
         <div className="action-btn">
+          <FontAwesomeIcon icon={faBicycle} />
+          <span>Report illegal dumping for pollution</span>
+        </div>
+        <div className="action-btn">
           <FontAwesomeIcon icon={faShoppingBag} />
-          <span>Reusable Bag</span>
+          <span>Clean up drives</span>
         </div>
         <div className="action-btn">
           <FontAwesomeIcon icon={faLightbulb} />
-          <span>Energy Save</span>
+          <span></span>
         </div>
-        <div className="action-btn">
-          <FontAwesomeIcon icon={faShower} />
-          <span>Short Shower</span>
-        </div>
+        
         <div className="action-btn">
           <FontAwesomeIcon icon={faSeedling} />
           <span>Plant Tree</span>
