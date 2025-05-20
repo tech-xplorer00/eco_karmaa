@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useUser } from '../contexts/UserContext';
@@ -6,11 +6,12 @@ import './Header.css';
 
 function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const isHomePage = location.pathname === '/';
   const { currentUser, logout } = useAuth();
   const { userStats } = useUser();
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,13 +28,32 @@ function Header() {
     };
   }, []);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownRef]);
+
   const handleLogout = async () => {
     try {
+      setDropdownOpen(false);
       await logout();
       navigate('/');
     } catch (error) {
       console.error('Logout failed', error);
     }
+  };
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
   };
 
   return (
@@ -45,20 +65,9 @@ function Header() {
           </Link>
         </div>
         <div className="nav-links">
-          {isHomePage ? (
-            <>
-              <a href="#how-it-works">How It Works</a>
-              <a href="#testimonials">Testimonials</a>
-              <a href="#features">Features</a>
-              <a href="#faq">FAQ</a>
-            </>
-          ) : (
+          {currentUser ? (
             <>
               <Link to="/">Home</Link>
-            </>
-          )}
-          {currentUser && (
-            <>
               <Link to="/dashboard">Dashboard</Link>
               <Link to="/challenges">Challenges</Link>
               <Link to="/badges">Badges</Link>
@@ -70,11 +79,26 @@ function Header() {
                 </span>
               )}
             </>
+          ) : (
+            <>
+              <a href="#how-it-works">How It Works</a>
+              <a href="#testimonials">Testimonials</a>
+              <a href="#features">Features</a>
+              <a href="#faq">FAQ</a>
+            </>
           )}
         </div>
         <div className="auth-buttons">
           {currentUser ? (
-            <button onClick={handleLogout} className="btn btn-secondary">Logout</button>
+            <div className={`user-dropdown ${dropdownOpen ? 'active' : ''}`} ref={dropdownRef}>
+              <button className="dropdown-toggle" onClick={toggleDropdown}>
+                {currentUser.name || currentUser.email || 'User'}
+              </button>
+              <div className={`dropdown-menu ${dropdownOpen ? 'show' : ''}`}>
+                <Link to="/profile" onClick={() => setDropdownOpen(false)}>Profile</Link>
+                <button onClick={handleLogout}>Logout</button>
+              </div>
+            </div>
           ) : (
             <>
               <Link to="/login" className="btn btn-secondary">Login</Link>

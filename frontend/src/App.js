@@ -1,5 +1,5 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -22,7 +22,18 @@ import { BadgeProvider } from './contexts/BadgeContext';
 import { RewardProvider } from './contexts/RewardContext';
 import { UserProvider } from './contexts/UserContext';
 
+// Navigation service
+import { setNavigate } from './services/navigationService';
+
 function App() {
+  // Get navigate function from react-router
+  const navigate = useNavigate();
+
+  // Set navigate function in the navigation service
+  useEffect(() => {
+    setNavigate(navigate);
+  }, [navigate]);
+
   return (
     <div className="App">
       <ErrorBoundary>

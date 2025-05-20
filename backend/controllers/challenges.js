@@ -118,6 +118,60 @@ exports.createChallenge = asyncHandler(async (req, res, next) => {
   });
 });
 
+// @desc    Join an existing challenge
+// @route   POST /api/v1/challenges/:id/join
+// @access  Private
+exports.joinChallenge = asyncHandler(async (req, res, next) => {
+  try {
+    // Find the original challenge to copy
+    const originalChallenge = await Challenge.findById(req.params.id);
+
+    if (!originalChallenge) {
+      return next(
+        new ErrorResponse(`Challenge not found with id of ${req.params.id}`, 404)
+      );
+    }
+
+    // Check if user has already joined this challenge
+    const existingChallenge = await Challenge.findOne({
+      user: req.user.id,
+      title: originalChallenge.title,
+      category: originalChallenge.category
+    });
+
+    if (existingChallenge) {
+      return next(
+        new ErrorResponse(`You have already joined this challenge`, 400)
+      );
+    }
+
+    // Create a new challenge for the user based on the original
+    const userChallenge = new Challenge({
+      title: originalChallenge.title,
+      description: originalChallenge.description,
+      targetCondition: originalChallenge.targetCondition,
+      targetValue: originalChallenge.targetValue,
+      currentValue: 0,
+      status: 'pending',
+      badgeReward: originalChallenge.badgeReward,
+      pointsReward: originalChallenge.pointsReward,
+      category: originalChallenge.category,
+      deadline: originalChallenge.deadline,
+      user: req.user.id
+    });
+
+    // Save the new challenge
+    await userChallenge.save();
+
+    res.status(201).json({
+      success: true,
+      data: userChallenge
+    });
+  } catch (error) {
+    next(new ErrorResponse(`Failed to join challenge: ${error.message}`, 500));
+  }
+});
+
 // @desc    Update challenge
 // @route   PUT /api/v1/challenges/:id
 // @access  Private
@@ -137,7 +191,10 @@ exports.updateChallenge = asyncHandler(async (req, res, next) => {
     );
   }
 
-  challenge = await Challenge.findByIdAndUpdate(req.params.id, req.body, {
+  // Remove fields that users should not be able to update
+  const { currentValue, status, ...updateData } = req.body;
+
+  challenge = await Challenge.findByIdAndUpdate(req.params.id, updateData, {
     new: true,
     runValidators: true
   });
@@ -283,5 +340,43 @@ exports.accomplishChallenge = asyncHandler(async (req, res, next) => {
     success: true,
     data: challenge,
     badge
+  });
+});
+
+// @desc    Change challenge status from pending to in-progress
+// @route   PATCH /api/v1/challenges/:id/start
+// @access  Private
+exports.startChallenge = asyncHandler(async (req, res, next) => {
+  let challenge = await Challenge.findById(req.params.id);
+
+  if (!challenge) {
+    return next(
+      new ErrorResponse(`Challenge not found with id of ${req.params.id}`, 404)
+    );
+  }
+
+  // Make sure user is the challenge owner
+  if (challenge.user.toString() !== req.user.id) {
+    return next(
+      new ErrorResponse(`User not authorized to update this challenge`, 401)
+    );
+  }
+
+  // Only allow changing from pending to in-progress
+  if (challenge.status !== 'pending') {
+    return next(
+      new ErrorResponse(`Challenge must be in pending status to start`, 400)
+    );
+  }
+
+  // Update challenge status to in-progress and set currentValue to at least 1
+  challenge.status = 'in-progress';
+  challenge.currentValue = challenge.currentValue || 1;
+  
+  await challenge.save();
+
+  res.status(200).json({
+    success: true,
+    data: challenge
   });
 }); 

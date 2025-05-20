@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import authService from '../services/authService';
+import { goToLogin } from '../services/navigationService';
 
 // Create context
 const AuthContext = createContext();
@@ -20,6 +21,8 @@ export const AuthProvider = ({ children }) => {
       } catch (err) {
         console.error('Failed to load user:', err);
         localStorage.removeItem('token');
+        // If authentication fails, we don't need to navigate here
+        // as the user might be on public page
       } finally {
         setLoading(false);
       }
@@ -27,6 +30,22 @@ export const AuthProvider = ({ children }) => {
 
     loadUser();
   }, []);
+
+  // Check token status periodically
+  useEffect(() => {
+    // If token disappears (removed by api.js), redirect to login
+    const checkToken = () => {
+      if (!authService.isAuthenticated() && currentUser) {
+        setCurrentUser(null);
+        goToLogin();
+      }
+    };
+
+    // Check every 2 seconds if token is still there
+    const intervalId = setInterval(checkToken, 2000);
+    
+    return () => clearInterval(intervalId);
+  }, [currentUser]);
 
   // Register a new user
   const register = async (userData) => {
@@ -66,6 +85,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await authService.logout();
       setCurrentUser(null);
+      goToLogin();
     } catch (err) {
       console.error('Logout error:', err);
     } finally {

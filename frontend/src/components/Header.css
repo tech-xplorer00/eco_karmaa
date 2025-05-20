@@ -102,6 +102,98 @@ header.scrolled {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+/* User dropdown styles */
+.user-dropdown {
+  position: relative;
+}
+
+.dropdown-toggle {
+  padding: 8px 12px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  position: relative;
+}
+
+.dropdown-toggle::after {
+  content: '';
+  display: inline-block;
+  margin-left: 8px;
+  vertical-align: middle;
+  border-top: 4px solid;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  transition: transform 0.2s ease;
+}
+
+.user-dropdown.active .dropdown-toggle::after {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 5px);
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 10px 0;
+  min-width: 150px;
+  display: none;
+  z-index: 10;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.dropdown-menu.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dropdown-menu a, 
+.dropdown-menu button {
+  display: block;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: var(--text-dark);
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-menu a:hover, 
+.dropdown-menu button:hover {
+  background-color: var(--bg-light);
+  color: var(--primary);
+}
+
+.user-points {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 15px;
+  padding: 5px 10px;
+  background-color: var(--primary-light);
+  border-radius: 20px;
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.point-icon {
+  font-size: 1.2rem;
+}
+
 @media (max-width: 768px) {
   .header-container {
     flex-direction: column;
@@ -116,5 +208,18 @@ header.scrolled {
   
   .nav-links a {
     margin: 5px 10px;
+  }
+  
+  .user-dropdown {
+    width: 100%;
+  }
+  
+  .dropdown-toggle {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .dropdown-menu {
+    width: 100%;
   }
 }

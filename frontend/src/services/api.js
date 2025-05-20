@@ -33,9 +33,12 @@ api.interceptors.response.use(
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       
-      // Handle token expiration
+      // Just remove the token, but don't navigate with window.location
+      // This avoids the full page refresh
       localStorage.removeItem('token');
-      window.location.href = '/login';
+      
+      // The auth context will handle redirecting to login
+      return Promise.reject(error);
     }
     
     return Promise.reject(error);
